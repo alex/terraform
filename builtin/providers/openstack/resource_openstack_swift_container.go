@@ -29,12 +29,13 @@ func resource_openstack_swift_container_create(
 	name := rs.Attribute["name"]
 
 	log.Printf("[DEBUG] Swift container create: %s", name)
-	_, err := containers.Create(storageClient, containers.CreateOpts{
+	resp, err := containers.Create(storageClient, containers.CreateOpts{
 		Name: name,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("Error create Swift container: %s", err)
 	}
+	defer resp.Body.close()
 
 	rs.ID = name
 	return rs, nil
@@ -62,12 +63,13 @@ func resource_openstack_swift_container_refresh(
 	storageClient := p.storageClient
 
 	name = s.Attributes["name"]
-	_, err := containers.Get(storageClient, containers.GetOpts{
+	resp, err := containers.Get(storageClient, containers.GetOpts{
 		Name: name,
 	})
 	if err != nil {
 		return s, err
 	}
+	defer resp.Body.Close()
 	return s, nil
 }
 

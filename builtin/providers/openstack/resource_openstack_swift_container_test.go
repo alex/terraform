@@ -23,12 +23,13 @@ func testAccCheckOpenstackSwiftContainerDestroy(s *terraform.State) {
 			continue
 		}
 
-		_, err := containers.Get(storageClient, containers.GetOpts{
+		resp, err := containers.Get(storageClient, containers.GetOpts{
 			Name: rs.ID,
 		})
 		if err == nil {
 			return fmt.Errorf("Swift container still exists")
 		}
+		defer resp.Body.Close()
 	}
 	return nil
 }
@@ -45,12 +46,13 @@ func testAccCheckOpenstackSwiftContainerExists(n string) resource.TestCheckFunc 
 		}
 
 		storageClient := testAccProvider.storageClient
-		_, err := containers.Get(storageClient, containers.GetOpts{
+		resp, err := containers.Get(storageClient, containers.GetOpts{
 			Name: rs.ID,
 		})
 		if err != nil {
 			return fmt.Errorf("Swift container error: %v", err)
 		}
+		defer resp.Body.Close()
 		return nil
 	}
 }
