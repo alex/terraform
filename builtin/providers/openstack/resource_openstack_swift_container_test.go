@@ -1,7 +1,17 @@
 package openstack
 
+import (
+	"fmt"
+	"testing"
+
+	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/terraform"
+
+	"github.com/rackspace/gophercloud/openstack/storage/v1/containers"
+)
+
 func TestAccOpenstackSwiftContainer(t *testing.T) {
-	resource.Test(t, resource.TestCaes{
+	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckOpenstackSwiftContainerDestroy,
@@ -15,7 +25,7 @@ func TestAccOpenstackSwiftContainer(t *testing.T) {
 	})
 }
 
-func testAccCheckOpenstackSwiftContainerDestroy(s *terraform.State) {
+func testAccCheckOpenstackSwiftContainerDestroy(s *terraform.State) error {
 	storageClient := testAccProvider.storageClient
 
 	for _, rs := range s.Resources {

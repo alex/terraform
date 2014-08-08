@@ -1,14 +1,16 @@
 package openstack
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform/helper/config"
 	"github.com/hashicorp/terraform/terraform"
+
+	storage "github.com/rackspace/gophercloud/openstack/storage/v1"
 )
 
 type ResourceProvider struct {
 	Config Config
+
+	storageClient *storage.Client
 }
 
 func (p *ResourceProvider) Validate(c *terraform.ResourceConfig) ([]string, []error) {

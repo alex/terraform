@@ -1,6 +1,9 @@
 package openstack
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform/helper/config"
 	"github.com/hashicorp/terraform/helper/diff"
 	"github.com/hashicorp/terraform/terraform"
@@ -26,7 +29,7 @@ func resource_openstack_swift_container_create(
 
 	rs := s.MergeDiff(d)
 
-	name := rs.Attribute["name"]
+	name := rs.Attributes["name"]
 
 	log.Printf("[DEBUG] Swift container create: %s", name)
 	resp, err := containers.Create(storageClient, containers.CreateOpts{
@@ -46,11 +49,11 @@ func resource_openstack_swift_container_destroy(
 	meta interface{}) error {
 
 	p := meta.(*ResourceProvider)
-	storageClient = p.storageClient
+	storageClient := p.storageClient
 
-	name = s.Attributes["name"]
+	name := s.Attributes["name"]
 	log.Printf("[DEBUG] Swift Delete Bucket: %s", name)
-	return containers.Delete(client, containers.DeleteOpts{
+	return containers.Delete(storageClient, containers.DeleteOpts{
 		Name: name,
 	})
 }
@@ -62,7 +65,7 @@ func resource_openstack_swift_container_refresh(
 	p := meta.(*ResourceProvider)
 	storageClient := p.storageClient
 
-	name = s.Attributes["name"]
+	name := s.Attributes["name"]
 	resp, err := containers.Get(storageClient, containers.GetOpts{
 		Name: name,
 	})
