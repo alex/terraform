@@ -32,13 +32,12 @@ func resource_openstack_swift_container_create(
 	name := rs.Attributes["name"]
 
 	log.Printf("[DEBUG] Swift container create: %s", name)
-	resp, err := containers.Create(storageClient, containers.CreateOpts{
+	_, err := containers.Create(storageClient, containers.CreateOpts{
 		Name: name,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("Error create Swift container: %s", err)
 	}
-	defer resp.Body.close()
 
 	rs.ID = name
 	return rs, nil

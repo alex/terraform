@@ -26,6 +26,10 @@ func (p *ResourceProvider) ValidateResource(
 	return resourceMap.Validate(t, c)
 }
 
+func (p *ResourceProvider) Configure(c *terraform.ResourceConfig) error {
+	panic("NOT IMPLEMENTED")
+}
+
 func (p *ResourceProvider) Apply(
 	s *terraform.ResourceState,
 	d *terraform.ResourceDiff) (*terraform.ResourceState, error) {
